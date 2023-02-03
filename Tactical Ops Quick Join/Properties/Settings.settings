@@ -11,5 +11,11 @@
     <Setting Name="closeOnJoin" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="masterservers" Type="System.String" Scope="User">
+      <Value Profile="(Default)">master.333networks.com:28900
+master.oldunreal.com:28900
+master.newbiesplayground.net:28900
+master.errorist.eu:28900</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

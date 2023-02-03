@@ -11,14 +11,11 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using TacticalOpsQuickJoin.Properties;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TacticalOpsQuickJoin {
     public partial class FormMain : Form {
-        public MasterServer.MasterServerInfo[] masterServers = new MasterServer.MasterServerInfo[] {
-            new MasterServer.MasterServerInfo { Address = "gsm.qtracker.com", Port = 28900 },
-            new MasterServer.MasterServerInfo { Address = "unreal.epicgames.com", Port = 28900 },
-            new MasterServer.MasterServerInfo { Address = "master.333networks.com", Port = 28900 }
-        };
+        public List<MasterServer.MasterServerInfo> masterServers = new List<MasterServer.MasterServerInfo>();
 
         public delegate void UpdateServerStatusAction(ServerData serverData);
         public delegate void UpdateMasterThreadStateAction(string state);
@@ -41,6 +38,23 @@ namespace TacticalOpsQuickJoin {
             closeOnJoinToolStripMenuItem.Checked = Settings.Default.closeOnJoin;
             serverListView.Sort(serverListPlayersColumn, ListSortDirection.Descending);
             playerListView.Sort(playerListTeamColumn, ListSortDirection.Descending);
+
+            string serverInputList = Settings.Default.masterservers;
+            using (StringReader sr = new StringReader(serverInputList)) {
+                string line;
+                while ((line = sr.ReadLine()) != null) {
+                    string[] parts = line.Split(':');
+                    if (parts.Length == 2)
+                    {
+                        MasterServer.MasterServerInfo masterServerInfo = new MasterServer.MasterServerInfo
+                        {
+                            Address = parts[0],
+                            Port = Convert.ToInt16(parts[1])
+                        };
+                        masterServers.Add(masterServerInfo);
+                    }
+                }
+            }
 
             lblNoResponse.Hide();
             lblNoPlayers.Hide();
@@ -159,8 +173,9 @@ namespace TacticalOpsQuickJoin {
 
             var responseData = new MasterServer.MasterServerResponse();
             List<string> completeMasterServerList = new List<string>();
-            for (int i = 0; i < masterServers.Length; i++) {
-                BeginInvoke(new UpdateMasterThreadStateAction(UpdateDownloadState), string.Format("Contacting masterservers... {0}/{1}", i + 1, masterServers.Length));
+            for (int i = 0; i < masterServers.Count; i++) {
+                Console.WriteLine("testing!!!!!!!!!!!!");
+                BeginInvoke(new UpdateMasterThreadStateAction(UpdateDownloadState), string.Format("Contacting masterservers... {0}/{1}", i + 1, masterServers.Count));
                 bool contactingMasterServer = true;
                 int tries = 0;
                 var currentMasterServer = masterServers[i];
@@ -520,6 +535,14 @@ namespace TacticalOpsQuickJoin {
                     e.SortResult = 0;
                 e.Handled = true;
             }
+        }
+
+        private void masterserversToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormMasterServers masterserverForm = new FormMasterServers();
+            masterserverForm.StartPosition = FormStartPosition.CenterParent;
+            masterserverForm.ShowDialog(this);
+            masterserverForm.Dispose();
         }
     }
 }

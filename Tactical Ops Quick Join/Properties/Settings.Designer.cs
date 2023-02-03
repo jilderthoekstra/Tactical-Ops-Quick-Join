@@ -58,5 +58,18 @@ namespace TacticalOpsQuickJoin.Properties {
                 this["closeOnJoin"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("master.333networks.com:28900\r\nmaster.oldunreal.com:28900\r\nmaster.newbiesplaygroun" +
+            "d.net:28900\r\nmaster.errorist.eu:28900")]
+        public string masterservers {
+            get {
+                return ((string)(this["masterservers"]));
+            }
+            set {
+                this["masterservers"] = value;
+            }
+        }
     }
 }

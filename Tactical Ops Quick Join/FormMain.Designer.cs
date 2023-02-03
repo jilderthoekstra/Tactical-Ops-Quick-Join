@@ -66,6 +66,7 @@
             this.lblDownloadState = new System.Windows.Forms.Label();
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyIPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.masterserversToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.serverListView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.playerListView)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -258,27 +259,28 @@
             // launchTacticalOps34ToolStripMenuItem
             // 
             this.launchTacticalOps34ToolStripMenuItem.Name = "launchTacticalOps34ToolStripMenuItem";
-            this.launchTacticalOps34ToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.launchTacticalOps34ToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
             this.launchTacticalOps34ToolStripMenuItem.Text = "Launch Tactical Ops 3.4";
             this.launchTacticalOps34ToolStripMenuItem.Click += new System.EventHandler(this.launchTacticalOps34ToolStripMenuItem_Click);
             // 
             // launchTacticalOps35ToolStripMenuItem
             // 
             this.launchTacticalOps35ToolStripMenuItem.Name = "launchTacticalOps35ToolStripMenuItem";
-            this.launchTacticalOps35ToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.launchTacticalOps35ToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
             this.launchTacticalOps35ToolStripMenuItem.Text = "Launch Tactical Ops 3.5";
             this.launchTacticalOps35ToolStripMenuItem.Click += new System.EventHandler(this.launchTacticalOps35ToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // configToolStripMenuItem
             // 
             this.configToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.masterserversToolStripMenuItem,
             this.setTacticalOps34PathToolStripMenuItem,
             this.setTacticalOps35PathToolStripMenuItem,
             this.closeOnJoinToolStripMenuItem});
@@ -522,6 +524,13 @@
             this.copyIPToolStripMenuItem.Text = "Copy Server Location";
             this.copyIPToolStripMenuItem.Click += new System.EventHandler(this.copyIPToolStripMenuItem_Click);
             // 
+            // masterserversToolStripMenuItem
+            // 
+            this.masterserversToolStripMenuItem.Name = "masterserversToolStripMenuItem";
+            this.masterserversToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.masterserversToolStripMenuItem.Text = "Masterservers";
+            this.masterserversToolStripMenuItem.Click += new System.EventHandler(this.masterserversToolStripMenuItem_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -602,6 +611,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn serverListMapColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn serverListPlayersColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn serverListVersionColumn;
+        private System.Windows.Forms.ToolStripMenuItem masterserversToolStripMenuItem;
     }
 }
 
