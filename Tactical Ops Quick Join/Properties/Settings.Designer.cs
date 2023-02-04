@@ -71,5 +71,17 @@ namespace TacticalOpsQuickJoin.Properties {
                 this["masterservers"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("./TO220/System/TacticalOps.exe")]
+        public string to220path {
+            get {
+                return ((string)(this["to220path"]));
+            }
+            set {
+                this["to220path"] = value;
+            }
+        }
     }
 }

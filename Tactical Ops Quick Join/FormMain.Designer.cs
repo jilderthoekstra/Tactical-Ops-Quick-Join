@@ -24,9 +24,9 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             this.serverListView = new System.Windows.Forms.DataGridView();
             this.serverListNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.serverListMapColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -45,6 +45,7 @@
             this.launchTacticalOps35ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.configToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.masterserversToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setTacticalOps34PathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setTacticalOps35PathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeOnJoinToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -66,7 +67,9 @@
             this.lblDownloadState = new System.Windows.Forms.Label();
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyIPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.masterserversToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openTO220Dialog = new System.Windows.Forms.OpenFileDialog();
+            this.setTacticalOps22PathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.launchTacticalOps22ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.serverListView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.playerListView)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -103,14 +106,14 @@
             this.serverListMapColumn,
             this.serverListPlayersColumn,
             this.serverListVersionColumn});
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.Silver;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.serverListView.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.Color.Silver;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.serverListView.DefaultCellStyle = dataGridViewCellStyle7;
             this.serverListView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.serverListView.Location = new System.Drawing.Point(0, 0);
             this.serverListView.Margin = new System.Windows.Forms.Padding(0);
@@ -172,14 +175,14 @@
             this.playerListDeathColumn,
             this.playerListPingColumn,
             this.playerListTeamColumn});
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.playerListView.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.playerListView.DefaultCellStyle = dataGridViewCellStyle8;
             this.playerListView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.playerListView.Location = new System.Drawing.Point(0, 0);
             this.playerListView.Margin = new System.Windows.Forms.Padding(0);
@@ -249,6 +252,7 @@
             // menuToolStripMenuItem
             // 
             this.menuToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.launchTacticalOps22ToolStripMenuItem,
             this.launchTacticalOps34ToolStripMenuItem,
             this.launchTacticalOps35ToolStripMenuItem,
             this.exitToolStripMenuItem});
@@ -281,12 +285,20 @@
             // 
             this.configToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.masterserversToolStripMenuItem,
+            this.setTacticalOps22PathToolStripMenuItem,
             this.setTacticalOps34PathToolStripMenuItem,
             this.setTacticalOps35PathToolStripMenuItem,
             this.closeOnJoinToolStripMenuItem});
             this.configToolStripMenuItem.Name = "configToolStripMenuItem";
             this.configToolStripMenuItem.Size = new System.Drawing.Size(55, 20);
             this.configToolStripMenuItem.Text = "Config";
+            // 
+            // masterserversToolStripMenuItem
+            // 
+            this.masterserversToolStripMenuItem.Name = "masterserversToolStripMenuItem";
+            this.masterserversToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.masterserversToolStripMenuItem.Text = "Masterservers";
+            this.masterserversToolStripMenuItem.Click += new System.EventHandler(this.masterserversToolStripMenuItem_Click);
             // 
             // setTacticalOps34PathToolStripMenuItem
             // 
@@ -427,14 +439,14 @@
             this.serverSettingsView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.serverSettingsSettingColumn,
             this.serverSettingsValueColumn});
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.serverSettingsView.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.serverSettingsView.DefaultCellStyle = dataGridViewCellStyle9;
             this.serverSettingsView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.serverSettingsView.Location = new System.Drawing.Point(0, 0);
             this.serverSettingsView.Margin = new System.Windows.Forms.Padding(0);
@@ -524,12 +536,25 @@
             this.copyIPToolStripMenuItem.Text = "Copy Server Location";
             this.copyIPToolStripMenuItem.Click += new System.EventHandler(this.copyIPToolStripMenuItem_Click);
             // 
-            // masterserversToolStripMenuItem
+            // openTO220Dialog
             // 
-            this.masterserversToolStripMenuItem.Name = "masterserversToolStripMenuItem";
-            this.masterserversToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
-            this.masterserversToolStripMenuItem.Text = "Masterservers";
-            this.masterserversToolStripMenuItem.Click += new System.EventHandler(this.masterserversToolStripMenuItem_Click);
+            this.openTO220Dialog.FileName = "TacticalOps.exe";
+            this.openTO220Dialog.Filter = "Tactical Ops 2.2 | *.exe";
+            this.openTO220Dialog.Title = "Please select Tactical Ops 2.2 file";
+            // 
+            // setTacticalOps22PathToolStripMenuItem
+            // 
+            this.setTacticalOps22PathToolStripMenuItem.Name = "setTacticalOps22PathToolStripMenuItem";
+            this.setTacticalOps22PathToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.setTacticalOps22PathToolStripMenuItem.Text = "Set Tactical Ops 2.2 Path";
+            this.setTacticalOps22PathToolStripMenuItem.Click += new System.EventHandler(this.setTacticalOps22PathToolStripMenuItem_Click);
+            // 
+            // launchTacticalOps22ToolStripMenuItem
+            // 
+            this.launchTacticalOps22ToolStripMenuItem.Name = "launchTacticalOps22ToolStripMenuItem";
+            this.launchTacticalOps22ToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.launchTacticalOps22ToolStripMenuItem.Text = "Launch Tactical Ops 2.2";
+            this.launchTacticalOps22ToolStripMenuItem.Click += new System.EventHandler(this.launchTacticalOps22ToolStripMenuItem_Click);
             // 
             // FormMain
             // 
@@ -612,6 +637,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn serverListPlayersColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn serverListVersionColumn;
         private System.Windows.Forms.ToolStripMenuItem masterserversToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem setTacticalOps22PathToolStripMenuItem;
+        private System.Windows.Forms.OpenFileDialog openTO220Dialog;
+        private System.Windows.Forms.ToolStripMenuItem launchTacticalOps22ToolStripMenuItem;
     }
 }
 

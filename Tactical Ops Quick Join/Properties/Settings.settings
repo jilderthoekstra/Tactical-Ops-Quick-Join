@@ -17,5 +17,8 @@ master.oldunreal.com:28900
 master.newbiesplayground.net:28900
 master.errorist.eu:28900</Value>
     </Setting>
+    <Setting Name="to220path" Type="System.String" Scope="User">
+      <Value Profile="(Default)">./TO220/System/TacticalOps.exe</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

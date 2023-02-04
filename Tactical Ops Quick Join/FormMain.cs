@@ -13,8 +13,10 @@ using System.Windows.Forms;
 using TacticalOpsQuickJoin.Properties;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace TacticalOpsQuickJoin {
-    public partial class FormMain : Form {
+namespace TacticalOpsQuickJoin
+{
+    public partial class FormMain : Form
+    {
         public List<MasterServer.MasterServerInfo> masterServers = new List<MasterServer.MasterServerInfo>();
 
         public delegate void UpdateServerStatusAction(ServerData serverData);
@@ -26,7 +28,8 @@ namespace TacticalOpsQuickJoin {
         private BackgroundWorker serverStatusWorker;
         private AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
-        public FormMain() {
+        public FormMain()
+        {
             InitializeComponent();
 
             playerListScoreColumn.ValueType = typeof(Int32);
@@ -40,9 +43,11 @@ namespace TacticalOpsQuickJoin {
             playerListView.Sort(playerListTeamColumn, ListSortDirection.Descending);
 
             string serverInputList = Settings.Default.masterservers;
-            using (StringReader sr = new StringReader(serverInputList)) {
+            using (StringReader sr = new StringReader(serverInputList))
+            {
                 string line;
-                while ((line = sr.ReadLine()) != null) {
+                while ((line = sr.ReadLine()) != null)
+                {
                     string[] parts = line.Split(':');
                     if (parts.Length == 2)
                     {
@@ -61,15 +66,18 @@ namespace TacticalOpsQuickJoin {
             lblWaitingForResponse.Hide();
         }
 
-        private void Form1_Load(object sender, EventArgs e) {
+        private void Form1_Load(object sender, EventArgs e)
+        {
             GetMasterList();
         }
 
-        private void FormMain_FormClosing(object sender, FormClosingEventArgs e) {
+        private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
             if (serverStatusWorker != null && serverStatusWorker.IsBusy)
                 serverStatusWorker.CancelAsync();
 
-            if (masterServerWorker.IsBusy) {
+            if (masterServerWorker.IsBusy)
+            {
                 appIsClosing = true;
                 masterServerWorker.CancelAsync();
                 e.Cancel = true;
@@ -79,8 +87,10 @@ namespace TacticalOpsQuickJoin {
             }
         }
 
-        private void GetServerStatus(ServerData serverData) {
-            if (serverStatusWorker != null && serverStatusWorker.IsBusy) {
+        private void GetServerStatus(ServerData serverData)
+        {
+            if (serverStatusWorker != null && serverStatusWorker.IsBusy)
+            {
                 serverStatusWorker.CancelAsync();
             }
             serverStatusWorker = new BackgroundWorker();
@@ -90,13 +100,14 @@ namespace TacticalOpsQuickJoin {
             serverStatusWorker.RunWorkerAsync(serverData);
         }
 
-        private void ServerStatusWorker_DoWork(object sender, DoWorkEventArgs e) {
+        private void ServerStatusWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
             var worker = sender as BackgroundWorker;
             var serverData = e.Argument as ServerData;
             IPEndPoint ipEndpoint = new IPEndPoint(IPAddress.Parse(serverData.ServerIP), serverData.ServerPort);
             byte[] dataStatus = System.Text.Encoding.UTF8.GetBytes(@"\status\");
             byte[] dataPlayer = System.Text.Encoding.UTF8.GetBytes(@"\players\");
-            
+
             TaggedUdpClient udpClient = new TaggedUdpClient(serverData.Id);
             udpClient.ipEndPoint = ipEndpoint;
             udpClient.serverData = serverData;
@@ -111,23 +122,33 @@ namespace TacticalOpsQuickJoin {
 
             bool completed = false;
             bool receivedData = false;
-            while (!completed && !worker.CancellationPending) {
-                if (udpClient.Available > 0) {
+            while (!completed && !worker.CancellationPending)
+            {
+                if (udpClient.Available > 0)
+                {
                     receivedData = true;
-                    try { 
+                    try
+                    {
                         Byte[] receiveBytes = udpClient.Receive(ref udpClient.ipEndPoint);
                         string dataReceived = Encoding.UTF8.GetString(receiveBytes);
                         completed = serverData.UpdateInfo(dataReceived);
                         serverResponse.ReceivedFinal = completed;
-                    } catch (Exception ex) {
+                    }
+                    catch (Exception ex)
+                    {
                         Console.WriteLine(ex.Message);
                     }
-                } else if (udpClient.Timedout()) {
-                    if (receivedData && udpClient.tries < 2) {
+                }
+                else if (udpClient.Timedout())
+                {
+                    if (receivedData && udpClient.tries < 2)
+                    {
                         udpClient.startTime = DateTime.Now;
                         udpClient.Send(dataPlayer, dataPlayer.Length);
                         udpClient.tries++;
-                    } else {
+                    }
+                    else
+                    {
                         completed = true;
                     }
                 }
@@ -143,21 +164,27 @@ namespace TacticalOpsQuickJoin {
             e.Cancel = worker.CancellationPending;
         }
 
-        private void ServerStatusWorker_Completed(object sender, RunWorkerCompletedEventArgs e) {
+        private void ServerStatusWorker_Completed(object sender, RunWorkerCompletedEventArgs e)
+        {
             var worker = sender as BackgroundWorker;
             worker.Dispose();
-            if (!e.Cancelled) {
+            if (!e.Cancelled)
+            {
                 lblWaitingForResponse.Hide();
                 var serverResponse = e.Result as ServerStatusResponse;
-                if (!serverResponse.ReceivedData) {
+                if (!serverResponse.ReceivedData)
+                {
                     lblNoResponse.Show();
-                } else {
+                }
+                else
+                {
                     UpdateStatusInfo(serverResponse.serverData);
                 }
             }
         }
 
-        private void GetMasterList() {
+        private void GetMasterList()
+        {
             masterServerWorker.WorkerSupportsCancellation = true;
             masterServerWorker.WorkerReportsProgress = true;
             masterServerWorker.DoWork += new DoWorkEventHandler(MasterServerWorker_DoWork);
@@ -166,34 +193,43 @@ namespace TacticalOpsQuickJoin {
             masterServerWorker.RunWorkerAsync();
         }
 
-        private void MasterServerWorker_DoWork(object sender, DoWorkEventArgs e) {
+        private void MasterServerWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
             BackgroundWorker worker = sender as BackgroundWorker;
             Console.WriteLine("start download serverlist");
             Thread.Sleep(200);
 
             var responseData = new MasterServer.MasterServerResponse();
             List<string> completeMasterServerList = new List<string>();
-            for (int i = 0; i < masterServers.Count; i++) {
+            for (int i = 0; i < masterServers.Count; i++)
+            {
                 Console.WriteLine("testing!!!!!!!!!!!!");
                 BeginInvoke(new UpdateMasterThreadStateAction(UpdateDownloadState), string.Format("Contacting masterservers... {0}/{1}", i + 1, masterServers.Count));
                 bool contactingMasterServer = true;
                 int tries = 0;
                 var currentMasterServer = masterServers[i];
-                while (contactingMasterServer && tries < 3 && !worker.CancellationPending) {
+                while (contactingMasterServer && tries < 3 && !worker.CancellationPending)
+                {
                     responseData = MasterServer.DownloadServerList(currentMasterServer);
-                    if (responseData.errorCode == 2) {
+                    if (responseData.errorCode == 2)
+                    {
                         BeginInvoke(new UpdateMasterThreadStateAction(UpdateDownloadState), String.Format("{0} Will try again in just a moment.", responseData.errorMessage));
                         tries++;
                         Thread.Sleep(500);
-                    } else {
+                    }
+                    else
+                    {
                         contactingMasterServer = false;
                     }
                 }
 
-                if (responseData.errorCode == 1) {
+                if (responseData.errorCode == 1)
+                {
                     BeginInvoke(new UpdateMasterThreadStateAction(UpdateDownloadState), responseData.errorMessage);
                     continue;
-                } else if (responseData.errorCode == 0) {
+                }
+                else if (responseData.errorCode == 0)
+                {
                     if (responseData.serverList != null)
                         completeMasterServerList.AddRange(responseData.serverList);
                 }
@@ -203,17 +239,21 @@ namespace TacticalOpsQuickJoin {
                 return;
 
             string[] masterServerList = completeMasterServerList.Distinct().ToArray();
-            if (masterServerList.Length == 0) {
+            if (masterServerList.Length == 0)
+            {
                 Console.WriteLine("serverlist empty");
                 this.BeginInvoke(new UpdateMasterThreadStateAction(UpdateDownloadState), "Received empty serverlist");
-            } else {
+            }
+            else
+            {
                 Console.WriteLine("received serverlist");
                 this.BeginInvoke(new UpdateMasterThreadStateAction(UpdateDownloadState), String.Format("Received {0} servers", masterServerList.Length));
             }
 
             servers.Clear();
             int totalServers = masterServerList.Length;
-            for (int i = 0; i < totalServers; i++) {
+            for (int i = 0; i < totalServers; i++)
+            {
                 string ip = masterServerList[i];
                 ServerData serverData = new ServerData(i, ip);
                 servers.Add(serverData);
@@ -226,7 +266,8 @@ namespace TacticalOpsQuickJoin {
 
             this.BeginInvoke(new UpdateMasterThreadStateAction(UpdateDownloadState), String.Format("Sending info request to servers {0:000}/{1:000}", 0, totalServers));
 
-            for (int i = 0; i < totalServers; i++) {
+            for (int i = 0; i < totalServers; i++)
+            {
                 ServerData currentServer = servers[i];
                 IPEndPoint ipEndpoint = new IPEndPoint(IPAddress.Parse(currentServer.ServerIP), currentServer.ServerPort);
                 TaggedUdpClient udpClient = new TaggedUdpClient(currentServer.Id);
@@ -235,14 +276,17 @@ namespace TacticalOpsQuickJoin {
                 clients.Enqueue(udpClient);
             }
 
+            int to220Count = 0;
             int to340Count = 0;
             int to350Count = 0;
             int numberOfServerReceived = 0;
 
             bool communicatingWithServers = true;
-            while (communicatingWithServers && !worker.CancellationPending) {
+            while (communicatingWithServers && !worker.CancellationPending)
+            {
                 // send data to servers
-                if (clients.Count > 0) {
+                if (clients.Count > 0)
+                {
                     var udpClient = clients.Dequeue();
                     udpClient.tries++;
                     udpClient.startTime = DateTime.Now;
@@ -252,30 +296,40 @@ namespace TacticalOpsQuickJoin {
                 }
 
                 // check connection if we have received any data
-                for (int i = receiveList.Count - 1; i >= 0; i--) {
+                for (int i = receiveList.Count - 1; i >= 0; i--)
+                {
                     var udpClient = receiveList[i];
-                    if (udpClient.Available > 0) {
-                        try {
+                    if (udpClient.Available > 0)
+                    {
+                        try
+                        {
                             Byte[] receiveBytes = udpClient.Receive(ref udpClient.ipEndPoint);
                             string dataReceived = Encoding.UTF8.GetString(receiveBytes);
                             udpClient.serverData.SetInfo(dataReceived);
-                            if (udpClient.serverData.IsTO340 || udpClient.serverData.IsTO350) {
+                            if (udpClient.serverData.IsTO220 || udpClient.serverData.IsTO340 || udpClient.serverData.IsTO350)
+                            {
                                 if (udpClient.serverData.IsTO340)
                                     to340Count++;
                                 else if (udpClient.serverData.IsTO350)
                                     to350Count++;
+                                else if (udpClient.serverData.IsTO220)
+                                    to220Count++;
                                 int progress = numberOfServerReceived / (totalServers / 100);
                                 worker.ReportProgress(progress, udpClient.serverData);
                             }
-                        } catch (Exception ex) {
+                        }
+                        catch (Exception ex)
+                        {
                             Console.WriteLine(ex.Message);
                         }
                         receiveList.RemoveAt(i);
                         udpClient.Close();
                         udpClient.Dispose();
                         numberOfServerReceived++;
-                        BeginInvoke(new UpdateMasterThreadStateAction(UpdateDownloadState), String.Format("Received info from servers {0:000}/{1:000}, found {2:00} Tactical Ops 3.4 and {3:00} Tactical Ops 3.5 servers", numberOfServerReceived, totalServers, to340Count, to350Count));
-                    } else if (udpClient.Timedout()) {
+                        BeginInvoke(new UpdateMasterThreadStateAction(UpdateDownloadState), String.Format("Received info from servers {0:000}/{1:000}.      Tactical Ops 2.2 ({2:00})     Tactical Ops 3.4 ({3:00})     Tactical Ops 3.5 ({4:00})", numberOfServerReceived, totalServers, to220Count, to340Count, to350Count));
+                    }
+                    else if (udpClient.Timedout())
+                    {
                         if (udpClient.tries < 3)
                             clients.Enqueue(udpClient);
                         else
@@ -292,16 +346,18 @@ namespace TacticalOpsQuickJoin {
             }
 
 
-            BeginInvoke(new UpdateMasterThreadStateAction(UpdateDownloadState), String.Format("Found ({0}) Tactical Ops 3.4 and ({1}) Tactical Ops 3.5 servers", to340Count, to350Count));
-            Console.WriteLine("Failed connections: "+ failedConnections.Count);
-            for (int i = failedConnections.Count - 1; i >= 0; i--) {
+            BeginInvoke(new UpdateMasterThreadStateAction(UpdateDownloadState), String.Format("Tactical Ops 2.2 ({0:00})     Tactical Ops 3.4 ({1:00})     Tactical Ops 3.5 ({2:00})", to220Count, to340Count, to350Count));
+            Console.WriteLine("Failed connections: " + failedConnections.Count);
+            for (int i = failedConnections.Count - 1; i >= 0; i--)
+            {
                 failedConnections[i].Close();
                 failedConnections[i].Dispose();
                 failedConnections.RemoveAt(i);
             }
         }
 
-        private void MasterServerWorker_ProgressChanged(object sender, ProgressChangedEventArgs e) {
+        private void MasterServerWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
             ServerData serverData = e.UserState as ServerData;
             string name = serverData.GetProperty("hostname");
             string map = serverData.GetProperty("maptitle");
@@ -314,12 +370,14 @@ namespace TacticalOpsQuickJoin {
             serverListView.Sort(serverListPlayersColumn, ListSortDirection.Descending);
         }
 
-        private void MasterServerWork_Completed(object sender, RunWorkerCompletedEventArgs e) {
+        private void MasterServerWork_Completed(object sender, RunWorkerCompletedEventArgs e)
+        {
             if (appIsClosing)
                 Close();
         }
 
-        private void serverListView_SelectionChanged(object sender, EventArgs e) {
+        private void serverListView_SelectionChanged(object sender, EventArgs e)
+        {
             serverSettingsView.Rows.Clear();
             playerListView.Rows.Clear();
             lblNoPlayers.Hide();
@@ -332,13 +390,16 @@ namespace TacticalOpsQuickJoin {
             GetServerStatus(selectedServer);
         }
 
-        private void UpdateDownloadState(string state) {
+        private void UpdateDownloadState(string state)
+        {
             lblDownloadState.Text = state;
         }
 
-        private void UpdateStatusInfo(ServerData serverData) {
+        private void UpdateStatusInfo(ServerData serverData)
+        {
             // if we have gotten an old packet just ignore it
-            if (serverData.Id != (int)serverListView.CurrentRow.Tag) {
+            if (serverData.Id != (int)serverListView.CurrentRow.Tag)
+            {
                 return;
             }
 
@@ -358,7 +419,8 @@ namespace TacticalOpsQuickJoin {
             serverSettings["Explosion FF"] = serverData.GetProperty("explositionff");
 
             serverSettingsView.Rows.Clear();
-            foreach (KeyValuePair<string, string> setting in serverSettings) {
+            foreach (KeyValuePair<string, string> setting in serverSettings)
+            {
                 DataGridViewRow newSetting = new DataGridViewRow();
                 newSetting.CreateCells(serverSettingsView, setting.Key, setting.Value);
                 serverSettingsView.Rows.Add(newSetting);
@@ -373,7 +435,8 @@ namespace TacticalOpsQuickJoin {
             else
                 lblNoPlayers.Hide();
 
-            for (int i = 0; i < numPlayers; i++) {
+            for (int i = 0; i < numPlayers; i++)
+            {
                 string playerName = serverData.GetProperty("player_" + i.ToString());
                 int score = Convert.ToInt32(serverData.GetProperty("score_" + i.ToString()));
                 int kills = Convert.ToInt32(serverData.GetProperty("frags_" + i.ToString()));
@@ -381,11 +444,13 @@ namespace TacticalOpsQuickJoin {
                 int ping = Convert.ToInt32(serverData.GetProperty("ping_" + i.ToString()));
                 int team = Convert.ToInt32(serverData.GetProperty("team_" + i.ToString()));
 
-                if (!string.IsNullOrEmpty(playerName)) {
+                if (!string.IsNullOrEmpty(playerName))
+                {
                     DataGridViewRow newPlayerRow = new DataGridViewRow();
                     newPlayerRow.CreateCells(playerListView, playerName, score, kills, deaths, ping, team);
 
-                    foreach (DataGridViewCell cell in newPlayerRow.Cells) {
+                    foreach (DataGridViewCell cell in newPlayerRow.Cells)
+                    {
                         newPlayerRow.DefaultCellStyle.BackColor = (team == 0) ? Color.FromArgb(255, 99, 99) : Color.FromArgb(99, 99, 255);
                         newPlayerRow.DefaultCellStyle.SelectionBackColor = (team == 0) ? Color.FromArgb(255, 99, 99) : Color.FromArgb(99, 99, 255);
                     }
@@ -395,8 +460,10 @@ namespace TacticalOpsQuickJoin {
             playerListView.Sort(playerListView.SortedColumn, (playerListView.SortOrder == SortOrder.Ascending) ? ListSortDirection.Ascending : ListSortDirection.Descending);
         }
 
-        private void btnJoinServer_Click(object sender, EventArgs e) {
-            if (serverListView.CurrentRow == null) {
+        private void btnJoinServer_Click(object sender, EventArgs e)
+        {
+            if (serverListView.CurrentRow == null)
+            {
                 return;
             }
 
@@ -405,94 +472,146 @@ namespace TacticalOpsQuickJoin {
             string serverAddress = String.Format("{0}:{1}", server.ServerIP, server.GetProperty("hostport"));
             IntPtr cpus = new IntPtr(0x0001);
 
-            if (server.IsTO340) {
+            if (server.IsTO340)
+            {
                 string fullPath = Path.GetFullPath(Settings.Default.to340path);
-                if (TacticalOpsFound(fullPath)) {
+                if (TacticalOpsFound(fullPath))
+                {
                     var process = Process.Start(fullPath, serverAddress);
                     process.ProcessorAffinity = cpus;
-                } else {
+                }
+                else
+                {
                     FormError errorDialog = new FormError("Tactical Ops 3.4 path not set.\nPlease set it through Config->Set Tactical Ops Path");
                     errorDialog.StartPosition = FormStartPosition.CenterParent;
                     errorDialog.ShowDialog(this);
                     errorDialog.Dispose();
                 }
-            } else if (server.IsTO350) {
+            }
+            else if (server.IsTO350)
+            {
                 string fullPath = Path.GetFullPath(Settings.Default.to350path);
-                if (TacticalOpsFound(fullPath)) {
+                if (TacticalOpsFound(fullPath))
+                {
                     var process = Process.Start(fullPath, serverAddress);
                     process.ProcessorAffinity = cpus;
-                } else {
+                }
+                else
+                {
                     FormError errorDialog = new FormError("Tactical Ops 3.5 path not set.\nPlease set it through Config->Set Tactical Ops Path");
                     errorDialog.StartPosition = FormStartPosition.CenterParent;
                     errorDialog.ShowDialog(this);
                     errorDialog.Dispose();
                 }
             }
+            else if (server.IsTO220)
+            {
+                string fullPath = Path.GetFullPath(Settings.Default.to220path);
+                if (TacticalOpsFound(fullPath))
+                {
+                    var process = Process.Start(fullPath, serverAddress);
+                    process.ProcessorAffinity = cpus;
+                }
+                else
+                {
+                    FormError errorDialog = new FormError("Tactical Ops 2.2 path not set.\nPlease set it through Config->Set Tactical Ops Path");
+                    errorDialog.StartPosition = FormStartPosition.CenterParent;
+                    errorDialog.ShowDialog(this);
+                    errorDialog.Dispose();
+                }
+            }
 
-            if (Settings.Default.closeOnJoin) {
+            if (Settings.Default.closeOnJoin)
+            {
                 Close();
             }
         }
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             FormAbout aboutDialog = new FormAbout();
             aboutDialog.StartPosition = FormStartPosition.CenterParent;
             aboutDialog.ShowDialog(this);
             aboutDialog.Dispose();
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             Close();
         }
 
-        private void setTacticalOps34PathToolStripMenuItem_Click(object sender, EventArgs e) {
-            if (openTO340Dialog.ShowDialog() == DialogResult.OK) {
-                Settings.Default.to340path = openTO340Dialog.FileName;
+
+        private void setTacticalOps22PathToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (openTO220Dialog.ShowDialog() == DialogResult.OK)
+            {
+                Settings.Default.to220path = openTO220Dialog.FileName;
             }
+
+            Settings.Default.Save();
         }
 
-        private void setTacticalOps35PathToolStripMenuItem_Click(object sender, EventArgs e) {
-            if (openTO350Dialog.ShowDialog() == DialogResult.OK) {
+        private void setTacticalOps34PathToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (openTO340Dialog.ShowDialog() == DialogResult.OK)
+            {
+                Settings.Default.to340path = openTO340Dialog.FileName;
+            }
+
+            Settings.Default.Save();
+        }
+
+        private void setTacticalOps35PathToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (openTO350Dialog.ShowDialog() == DialogResult.OK)
+            {
                 Settings.Default.to350path = openTO350Dialog.FileName;
             }
 
             Settings.Default.Save();
         }
 
-        private void closeOnJoinToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void closeOnJoinToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             Settings.Default.closeOnJoin = closeOnJoinToolStripMenuItem.Checked;
             Settings.Default.Save();
         }
 
-        private void launchTacticalOps34ToolStripMenuItem_Click(object sender, EventArgs e) {
-            string fullPath = Path.GetFullPath(Settings.Default.to340path);
-            if (TacticalOpsFound(fullPath)) {
+        private void launchTacticalOps22ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LaunchTacticalOps(Settings.Default.to220path, "2.2");
+        }
+
+        private void launchTacticalOps34ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LaunchTacticalOps(Settings.Default.to340path, "3.4");
+        }
+
+        private void launchTacticalOps35ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LaunchTacticalOps(Settings.Default.to350path, "3.5");
+        }
+
+        private void LaunchTacticalOps(string path, string version)
+        {
+            string fullPath = Path.GetFullPath(path);
+            if (TacticalOpsFound(fullPath))
+            {
                 IntPtr cpus = new IntPtr(0x0001);
                 var process = Process.Start(fullPath);
                 process.ProcessorAffinity = cpus;
-            } else {
-                FormError errorDialog = new FormError("Tactical Ops 3.4 path not set.\nPlease set it through Config->Set Tactical Ops Path");
+            }
+            else
+            {
+                FormError errorDialog = new FormError(string.Format("Tactical Ops {0} path not set.\nPlease set it through Config->Set Tactical Ops Path", version));
                 errorDialog.StartPosition = FormStartPosition.CenterParent;
                 errorDialog.ShowDialog(this);
                 errorDialog.Dispose();
             }
         }
 
-        private void launchTacticalOps35ToolStripMenuItem_Click(object sender, EventArgs e) {
-            string fullPath = Path.GetFullPath(Settings.Default.to350path);
-            if (TacticalOpsFound(fullPath)) {
-                IntPtr cpus = new IntPtr(0x0001);
-                var process = Process.Start(fullPath);
-                process.ProcessorAffinity = cpus;
-            } else {
-                FormError errorDialog = new FormError("Tactical Ops 3.5 path not set.\nPlease set it through Config->Set Tactical Ops Path");
-                errorDialog.StartPosition = FormStartPosition.CenterParent;
-                errorDialog.ShowDialog(this);
-                errorDialog.Dispose();
-            }
-        }
-
-        private bool TacticalOpsFound(string path) {
+        private bool TacticalOpsFound(string path)
+        {
             if (string.IsNullOrEmpty(path))
                 return false;
 
@@ -500,8 +619,10 @@ namespace TacticalOpsQuickJoin {
         }
 
 
-        private void serverListView_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e) {
-            if (e.Button == MouseButtons.Right) {
+        private void serverListView_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
                 var grid = sender as DataGridView;
                 grid.CurrentCell = grid[e.ColumnIndex, e.RowIndex];
                 grid.Rows[e.RowIndex].Selected = true;
@@ -509,7 +630,8 @@ namespace TacticalOpsQuickJoin {
             }
         }
 
-        private void copyIPToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void copyIPToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             ServerData serverData = servers[(int)serverListView.CurrentRow.Tag];
             string ip = string.Format("unreal://{0}:{1}", serverData.ServerIP, serverData.GetProperty("hostport"));
             Clipboard.SetText(ip);
@@ -518,8 +640,10 @@ namespace TacticalOpsQuickJoin {
 
         }
 
-        private void serverListView_SortCompare(object sender, DataGridViewSortCompareEventArgs e) {
-            if (serverListPlayersColumn.Name == e.Column.Name) {
+        private void serverListView_SortCompare(object sender, DataGridViewSortCompareEventArgs e)
+        {
+            if (serverListPlayersColumn.Name == e.Column.Name)
+            {
                 var cellValue1 = e.CellValue1.ToString().Split('/');
                 var cellValue2 = e.CellValue2.ToString().Split('/');
 
@@ -537,8 +661,7 @@ namespace TacticalOpsQuickJoin {
             }
         }
 
-        private void masterserversToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        private void masterserversToolStripMenuItem_Click(object sender, EventArgs e) {
             FormMasterServers masterserverForm = new FormMasterServers();
             masterserverForm.StartPosition = FormStartPosition.CenterParent;
             masterserverForm.ShowDialog(this);

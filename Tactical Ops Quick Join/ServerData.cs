@@ -7,6 +7,7 @@ namespace TacticalOpsQuickJoin {
         public string ServerIP { get; private set; }
         public int ServerPort { get; private set; }
         public string ServerName { get; private set; }
+        public bool IsTO220 { get; private set; }
         public bool IsTO340 { get; private set; }
         public bool IsTO350 { get; private set; }
 
@@ -68,6 +69,7 @@ namespace TacticalOpsQuickJoin {
             string gameType = string.Empty;
 
             serverInfo.TryGetValue("gametype", out gameType);
+            IsTO220 = (gameType == "TO220");
             IsTO340 = (gameType == "TO340");
             IsTO350 = (gameType == "TO350");
         }
